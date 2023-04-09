@@ -39,7 +39,9 @@
   }
   const handleLogin = ()=>{
     // 登录逻辑
-    router.replace('/login')
+    router.push({
+      path: '/login'
+    })
   }
   const handleRegister = ()=> {
     // 注册逻辑

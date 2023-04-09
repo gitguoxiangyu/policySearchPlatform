@@ -1,11 +1,10 @@
 <template>
   <div>
-    <HeadBar/>
     <div class="mainContent">
       <div class="search">
         <el-input placeholder="请输入搜索内容" v-model="searchValue" class="search-input" :prefix-icon="Search" size="large"></el-input>
         <el-button @click="search" class="search-button" size="large" type="primary">搜索</el-button>
-        <el-button @click="search" class="detail-search-button" size="large" type="primary">高级搜索</el-button>
+        <el-button @click="toDetailSearch" class="detail-search-button" size="large" type="primary">高级搜索</el-button>
       </div>
       
       <div class="policy-recommendation">
@@ -30,11 +29,24 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import HeadBar from '@/src/components/HeadBar.vue'
+import router from '@/src/router/index'
 import { Search } from '@element-plus/icons-vue'
 
+// 搜索框逻辑
 const searchValue = ref('')
-const activeIndex = ref('1')
+
+function search() {
+  router.push({
+    path: '/list'
+  })
+}
+
+function toDetailSearch(){
+  router.push({
+    path: '/search'
+  })
+}
+
 const policies = [
   { id: 1, title: '政策标题1', summary: '政策概要信息1' },
   { id: 2, title: '政策标题2', summary: '政策概要信息2' },
@@ -42,14 +54,6 @@ const policies = [
   { id: 4, title: '政策标题4', summary: '政策概要信息4' },
   { id: 5, title: '政策标题5', summary: '政策概要信息5' }
 ]
-
-function search() {
-  console.log(searchValue.value)
-}
-
-function handleSelect(index:string) {
-  activeIndex.value = index
-}
 </script>
 
 <style scoped>
