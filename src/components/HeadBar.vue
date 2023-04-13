@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <div class="header">
-      <div class="left">
+      <div class="left" @click="toHome">
         政策检索平台
       </div>
       <div class="right">
@@ -14,31 +14,60 @@
           v-model="searchValue"
           @keyup.enter.native="handleSearch"
         />
-        <div class="login">
+        <div class="login" v-if="!isLogin">
           <el-button type="text" @click="handleLogin">登录</el-button>
           <el-button type="text" @click="handleRegister">注册</el-button>
+        </div>
+        <div class="userInfo" v-else>
+          <el-dropdown>
+            <span class="el-dropdown-link">
+              尊敬的xxx用户，您好
+              <el-icon class="el-icon--right">
+                <arrow-down />
+              </el-icon>
+            </span>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item @click="toPersonInfo">个人中心</el-dropdown-item>
+                <el-dropdown-item @click="logout">退出登录</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
         </div>
       </div>
     </div>
   </div>
+  <div class="replace"></div>
 </template>
 
 <script lang="ts" setup>
   import { ref } from 'vue';
   import { Search } from '@element-plus/icons-vue'
-  import router from "@/src/router";
+  import router from "@/router";
+  import { userUserInfoStore } from '@/stores/useUserInfoStore'
 
   const searchValue = ref<string>('')
+
+  const {isLogin , logout} = userUserInfoStore()
 
   const handleClear = ()=>{
     searchValue.value = ''
   }
 
+  const toHome = ()=>{
+    router.push({
+      path: '/'
+    })
+  }
+
   const handleSearch = ()=>{
     // 搜索逻辑
   }
+
+  // 登录注册
   const handleLogin = ()=>{
     // 登录逻辑
+    console.log("login");
     router.push({
       path: '/login'
     })
@@ -47,12 +76,22 @@
     // 注册逻辑
   }
 
+  // 登陆后，功能
+  const toPersonInfo = ()=>{
+    router.push({
+      path: '/personal'
+    })
+  }
 </script>
 
 <style scoped lang="less">
 .main{
   height: 80px;
-  background-image: url('@/src/assets/img/background.jpg');
+  width: 100%;
+  background-image: url('@/assets/img/background.jpg');
+  position: fixed;
+  top:0;
+  z-index: 999;
   .header {
     display: flex;
     justify-content: space-between;
@@ -72,12 +111,30 @@
 
     .right {
       display: flex;
+      align-items: center;
       .login{
         margin-left: 30px;
         display: flex;
         flex-direction: row;
       }
+      .userInfo{
+        margin-left: 30px;
+        width: 220px;
+        font-size: small;
+      }
     }
   }
+}
+
+.replace{
+  height: 80px;
+  margin-bottom: 10px;
+}
+
+.example-showcase .el-dropdown-link {
+  cursor: pointer;
+  color: var(--el-color-primary);
+  display: flex;
+  align-items: center;
 }
 </style>

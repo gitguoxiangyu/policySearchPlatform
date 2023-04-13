@@ -1,5 +1,6 @@
-import { post } from '@/src/utils/request'
-import type { FcResponse , IAnyObj} from '@/src/utils/request'
+import { post } from '@/utils/request'
+import type { FcResponse , IAnyObj} from '@/utils/request'
+import { ElMessage } from 'element-plus'
 
 interface loginForm extends IAnyObj{
   name: string,
@@ -19,6 +20,7 @@ export const login = async (form:loginForm)=>{
       localStorage.setItem('token', success.data)
       return success
     }
+    ElMessage.error('登录失败，请检查用户名和密码是否正确')
     return err
   })
 }
@@ -32,6 +34,7 @@ export const register = async (form:registerForm)=>{
       localStorage.setItem('token', success.data)
       return success
     }
+    
     return err
   })
 }

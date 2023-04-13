@@ -24,7 +24,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive } from 'vue'
-import { register } from '@/src/api/user/loginRegister'
+import { register } from '@/api/user/loginRegister'
 export default defineComponent({
   setup() {
     const form = reactive({

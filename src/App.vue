@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import HeadBar from '@/src/components/HeadBar.vue'
+import HeadBar from '@/components/headBar.vue'
 </script>
 
 <template>

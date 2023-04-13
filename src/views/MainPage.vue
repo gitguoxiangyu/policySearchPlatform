@@ -1,25 +1,36 @@
 <template>
   <div>
     <div class="mainContent">
-      <div class="search">
-        <el-input placeholder="请输入搜索内容" v-model="searchValue" class="search-input" :prefix-icon="Search" size="large"></el-input>
-        <el-button @click="search" class="search-button" size="large" type="primary">搜索</el-button>
-        <el-button @click="toDetailSearch" class="detail-search-button" size="large" type="primary">高级搜索</el-button>
-      </div>
-      
-      <div class="policy-recommendation">
-        <h2>最新政策推荐</h2>
+
+      <searchInput/>
+
+      <div class="policy">
+        <div class="title">————  最新政策  ————</div>
         <div class="policy-recommendation-container">
-          <ul class="policy-recommendation-list">
-            <li v-for="(policy, index) in policies" :key="index">
-              <!-- <router-link :to="{ name: 'policy', params: { id: policy.id } }">{{ policy.title }}</router-link> -->
-              <p>{{ policy.summary }}</p>
-            </li>
-          </ul>
+
+          <!-- 推荐政策列表 -->
+          <div class="policy-recommendation">
+            <div class="recommend-title"> 推荐文章</div>
+            <div class="recommend-policys">
+              <el-collapse>
+                <el-collapse-item v-for="item in policies" :title="item.title" :name="item.id">
+                  <div>
+                    中共中央发出关于学习《习近平著作选读》第一卷、第二卷的通知
+                  </div>
+                  <div>
+                    Consistent within interface: all elements should be consistent, such
+                    as: design style, icons and texts, position of elements, etc.
+                  </div>
+                  <div class="policy-link">查看全文</div>
+                </el-collapse-item>
+              </el-collapse>
+            </div>
+          </div>
+
           <div class="policy-recommendation-images">
-            <img src="./assets/policy-image-1.jpg" alt="">
-            <img src="./assets/policy-image-2.jpg" alt="">
-            <img src="./assets/policy-image-3.jpg" alt="">
+            <div class="gongbao-title">国务院公报</div>
+            <el-divider />
+            <img src="@/assets/img/gwygongbao.png" alt="国务院公报">
           </div>
         </div>
       </div>
@@ -29,23 +40,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import router from '@/src/router/index'
-import { Search } from '@element-plus/icons-vue'
-
-// 搜索框逻辑
-const searchValue = ref('')
-
-function search() {
-  router.push({
-    path: '/list'
-  })
-}
-
-function toDetailSearch(){
-  router.push({
-    path: '/search'
-  })
-}
+import searchInput from '@/components/searchInput.vue'
 
 const policies = [
   { id: 1, title: '政策标题1', summary: '政策概要信息1' },
@@ -56,50 +51,55 @@ const policies = [
 ]
 </script>
 
-<style scoped>
+<style scoped lang="less">
 .mainContent{
   background-color: white;
   width: 70%;
+  min-height: 90vh;
   margin: 10px auto;
   padding: 10px 20px;
 }
-
-.menu {
-  line-height: 60px;
-}
-
-.search {
-  margin-top: 20px;
-  display:flex;
-  justify-content:center;
-}
-
-.search-input {
-  width:400px;
+.title{
+  margin: 40px auto;
+  font-size: 40px;
+  font-weight: bold;
+  color: rgb(44, 145, 232);
+  text-align: center;
 }
 
 .policy-recommendation {
+  width: 68%;
   margin-top: 20px;
+  padding: 10px 34px 33px 20px;
+  box-shadow: 0 0 15px #e5e3e3;
+  .recommend-title{
+    margin: 20px 0;
+    font-size: large;
+  }
 }
 
 .policy-recommendation-container {
   display:flex;
-}
-
-.policy-recommendation-list {
-  width:50%;
+  justify-content: space-between;
 }
 
 .policy-recommendation-images {
-  width:50%;
+  width:28%;
+  margin-top: 20px;
+  .gongbao-title{
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: -20px;
+  }
 }
 
 .policy-recommendation-images img {
-  width:100%;
+  width:80%;
+  transition: all 1s;
 }
-
-.menu .el-submenu__title {
-  display:block;
+.policy-recommendation-images img:hover {
+  margin-top: -5px;
+  margin-left: -3px;
 }
 
 .policy-recommendation h2 {
@@ -108,25 +108,12 @@ const policies = [
     margin-bottom:20px;
     text-align:center;
 }
-
-.policy-recommendation-list li {
-    margin-bottom:20px;
-    border-bottom:solid #ccc thin;
-    padding-bottom:20px;
-}
-
-.policy-recommendation-list li:last-child {
-    border-bottom:none;
-}
-
-.policy-recommendation-list li a {
-    font-size:18px;
-    font-weight:bold;
-    color:#333;
-}
-
-.policy-recommendation-list li p {
-    font-size:14px;
-    color:#666;
+.recommend-title::before{
+  width: 4px;
+  height: 20px;
+  border-radius: 4px;
+  background-color: #4dc7f8;
+  color: #4dc7f8;
+  content: '1';
 }
 </style>

@@ -20,7 +20,18 @@ const router = createRouter({
     },
     {
       path: '/list',
-      component: ()=> import('../views/searchList.vue')
+      name: 'list',
+      component: ()=> import('../views/SearchList.vue'),
+    },
+    {
+      path: '/policy',
+      name: 'policy',
+      component: ()=> import('../views/PolicyView.vue')
+    },
+    {
+      path: '/personal',
+      name: 'personal',
+      component: ()=> import('../views/PersonInfo.vue')
     }
   ]
 })

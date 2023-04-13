@@ -18,7 +18,9 @@
 
 <script lang="ts">
 import { defineComponent, reactive } from 'vue'
-import { login } from '@/src/api/user/loginRegister'
+import { login } from '@/api/user/loginRegister'
+import router from '@/router'
+import { userUserInfoStore } from '@/stores/useUserInfoStore'
 export default defineComponent({
   setup() {
     const form = reactive({
@@ -26,7 +28,11 @@ export default defineComponent({
       password: ''
     })
     const submit = ()=>{
-      login(form);
+      login(form).then(()=>{
+        const {userLogin} = userUserInfoStore()
+        userLogin()
+        router.back()
+      });
     }
     return {
       form,
@@ -41,7 +47,7 @@ export default defineComponent({
   height: 100vh;
   width: 100%;
   padding: 30vh 0;
-  background-image: url(@/src/assets/img/back.jpg);
+  background-image: url(@/assets/img/back.jpg);
   background-size: cover;
 }
 .inputContainer{

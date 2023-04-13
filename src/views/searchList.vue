@@ -1,51 +1,18 @@
 <template>
   <div class="mainContent">
-    <!-- <el-row>
-      <el-col>
-        <el-dropdown>
-          <span class="el-dropdown-link">
-            按时间筛选
-            <el-icon class="el-icon--right">
-              <arrow-down />
-            </el-icon>
-          </span>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item>一周内</el-dropdown-item>
-              <el-dropdown-item>Action 2</el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
-      </el-col>
-    </el-row>
-
-    <div class="policy-list">
-      <el-table
-        :data="tableData"
-        :default-sort="{ prop: 'date', order: 'descending' }"
-        style="width: 100%"
-        :header-row-style="headerRowStyle"
-        :header-cell-style="headerCellStyle"
-      >
-        <el-table-column prop="date" label="Date" sortable width="120" />
-        <el-table-column prop="name" label="Name" width="180" />
-        <el-table-column prop="address" label="Address" :formatter="formatter" />
-      </el-table>
-    </div> -->
-
     <div class="headOption">
-      <el-row :gutter="10" align="middle">
-        <el-col :span="2">部门</el-col>
+      <searchInput :search-fn="searchFn"/>
+      <el-row :gutter="10" align="middle" style="margin-top: 20px;">
+        <el-col :span="2">时间排序</el-col>
         <el-col :span="22">
-          <el-radio-group v-model="radio1" size="large">
-            <el-radio-button label="666" />
-            <el-radio-button label="555" />
-            <el-radio-button label="Los Angeles" />
-            <el-radio-button label="Chicago" />
+          <el-radio-group v-model="timeSort" size="large">
+            <el-radio-button label="不限"/>
+            <el-radio-button label="由远到近"/>
+            <el-radio-button label="由近到远" />
           </el-radio-group>
         </el-col>
       </el-row>
-      <el-row :gutter="10" align="middle">
+      <el-row :gutter="10" align="middle" style="margin-top: 20px;">
         <el-col :span="2">年份</el-col>
         <el-col :span="22">
           <el-radio-group v-model="radio1" size="large">
@@ -56,7 +23,7 @@
           </el-radio-group>
         </el-col>
       </el-row>
-      <el-row :gutter="10" align="middle">
+      <el-row :gutter="10" align="middle" style="margin-top: 20px;">
         <el-col :span="2">年份</el-col>
         <el-col :span="22">
           <el-radio-group v-model="radio1" size="large">
@@ -71,11 +38,13 @@
 
     <div class="body">
       <div class="policyList">
-        <div class="policyItem">
-          <div class="policyTitle">关于2022年国民经济和社会发展计划执行情况与2023年国民经济和社会发展计划草案的报告</div>
-          <div class="policyAbstract">新华社北京3月15日电关于2022年国民经济和社会发展计划执行情况与2023年国民经济和社会发展计划草案的报告——2023年3月5日在第十四届全国人民代表大会第一次会议上国家发展和改革委员会各位代表：受国务院委托，现将2022年国民经济和社会发展计划执行情况与2023年国民经济和社会发展计划草案提请十四届全国人大一次会议审查，并请全国政协各位委员提出意见……</div>
-          <div class="policyInfo">发布时间：2023-03-17 发文机构：全国人民代表大会</div>
+        <div class="policyItem" v-for="item in displayPolicyList" @click="toPolicyView(item)">
+          <div class="policyTitle">{{ item.POLICY_TITLE }}</div>
+          <div class="policyAbstract">{{ item.POLICY_BODY.substring(0,100) }}......</div>
+          <div class="policyInfo">发文时间：{{ item.UPDATE_DATE }} 发文机构：{{ item.PUB_AGENCY }}</div>
+          <el-divider />
         </div>
+        <el-pagination background layout="prev, pager, next" :total="1000" />
       </div>
       <div class="recommendPolicy">
         <div class="recommendTitle"> 推荐文章</div>
@@ -85,11 +54,42 @@
 </template>
 
 <script lang="ts" setup>
-import {ref} from 'vue'
-import { ArrowDown } from '@element-plus/icons-vue'
-import type { TableColumnCtx } from 'element-plus'
-const radio1 = ref('New York')
+import {reactive, ref} from 'vue'
+import searchInput from '@/components/searchInput.vue'
+import { useRoute } from 'vue-router';
+import { searchPolicy } from '@/api/policy/search';
+import { usePolicyStore } from '@/stores/usePolicyStore'
+import router from '@/router';
 
+const province = ref('不限')
+const timeSort = ref('不限')
+
+const policyList = reactive([])
+const displayPolicyList = reactive([])
+
+// 获取路由query参数
+let route = useRoute()
+
+searchPolicy(route.query).then((data:Array<any>)=>{
+  console.log(data);
+  displayPolicyList.push(...data)
+  policyList.push(...data)
+})
+
+
+const searchFn = (val: any)=>{
+  policyList.values = val
+}
+
+const { tempPolicy , setPolicy } = usePolicyStore()
+
+const toPolicyView = (item) => {
+  setPolicy(item)
+  console.log(tempPolicy);
+  router.push({
+    path: '/policy'
+  })
+}
 </script>
 
 <style scoped lang="less">
@@ -114,7 +114,7 @@ const radio1 = ref('New York')
     background-color: white;
     border-radius: 5px;
     width: 74%;
-    padding: 20px 15px;
+    padding: 20px 2px;
   }
   .recommendPolicy{
     background-color: white;
@@ -137,61 +137,20 @@ const radio1 = ref('New York')
 }
 
 .policyItem{
-  
+  padding: 18px 18px 0px 18px;
   .policyTitle{
     font-size: 20px;
     font-weight: bold;
   }
   .policyAbstract{
-    margin: 8px 0px;
+    margin: 12px 0px;
   }
   .policyInfo{
     font-size: 12px;
     color:grey
   }
 }
+.policyItem:hover{
+  background-color: rgb(236, 236, 236);
+}
 </style>
-
-<!-- interface User {
-  date: string
-  name: string
-  address: string
-}
-const headerRowStyle = (args:any) => {
-  console.log(args)
-  return {
-    height: '100px',
-    backgroundColor: 'red'
-  }
-}
-const headerCellStyle = ({}) => {
-  return {
-    backgroundColor: 'rgb(242,242,242)'
-  }
-}
-const formatter = (row: User, column: TableColumnCtx<User>) => {
-  return row.address
-}
-
-const tableData: User[] = [
-  {
-    date: '2016-05-03',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-02',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-04',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-01',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-] -->

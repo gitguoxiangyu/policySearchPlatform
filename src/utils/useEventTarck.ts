@@ -1,6 +1,6 @@
 // 埋点sdk
 
-import request from '@/src/api/eventTrack'
+import request from '@/api/eventTrack'
 import { onBeforeUnmount, onMounted, ref} from 'vue'
 
 interface userInfo{

@@ -9,7 +9,7 @@ export default defineConfig({
   resolve: {
     // 路径别名配置
     alias: {
-      '@/src': fileURLToPath(new URL('./src', import.meta.url))
+      '@': fileURLToPath(new URL('./src', import.meta.url))
     }
   }
 })

@@ -1,12 +1,12 @@
 // 封装 axios ，最后希望以 const [res , err] =  await api.getUserInfo()调用, { AxiosInstance , AxiosRequestConfig }
 import Axios from "axios";
-import router from '@/src/router/index'
+import router from '@/router/index'
 
 
 const axios = Axios
 // 配置不同环境下，axios的默认请求地址
 if (process.env.NODE_ENV == 'development'){
-  axios.defaults.baseURL = 'http://113.54.240.120:8080'
+  axios.defaults.baseURL = 'http://113.54.247.14:8080'
 }else if (process.env.NODE_ENV == 'debug'){
   axios.defaults.baseURL = ''
 }else if (process.env.NODE_ENV == 'production'){

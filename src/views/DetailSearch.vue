@@ -65,7 +65,7 @@
 
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
-import router from '@/src/router/index'
+import router from '@/router/index'
 import { Search } from '@element-plus/icons-vue'
 
 const searchValue = ref('')
