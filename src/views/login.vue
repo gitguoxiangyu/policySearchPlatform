@@ -4,7 +4,7 @@
       <div class="containerHead">政策检索平台</div>
       <el-form :model="form" label-width="60px">
         <el-form-item label="用户名">
-          <el-input v-model="form.name" placeholder="请输入用户名"/>
+          <el-input v-model="form.UserName" placeholder="请输入用户名"/>
         </el-form-item>
         <el-form-item label="密码">
           <el-input v-model="form.password" placeholder="请输入密码" type="password"/>
@@ -24,14 +24,16 @@ import { userUserInfoStore } from '@/stores/useUserInfoStore'
 export default defineComponent({
   setup() {
     const form = reactive({
-      name: '',
+      UserName: '',
       password: ''
     })
     const submit = ()=>{
       login(form).then(()=>{
-        const {userLogin} = userUserInfoStore()
+        const {userLogin , userInfo} = userUserInfoStore()
         userLogin()
-        router.back()
+        router.push({
+          path: '/'
+        })
       });
     }
     return {

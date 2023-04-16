@@ -2,7 +2,7 @@
   <div class="body">
     <div class="inputContainer">
       <div class="containerHead">政策检索平台</div>
-      <el-form :model="form" label-width="60px">
+      <el-form :model="form" label-width="70px" label-position="left">
         <el-form-item label="用户名">
           <el-input v-model="form.name" placeholder="请输入用户名"/>
         </el-form-item>
@@ -11,9 +11,6 @@
         </el-form-item>
         <el-form-item label="确认密码">
           <el-input v-model="form.identifyPassword" placeholder="请再次输入密码" type="password"/>
-        </el-form-item>
-        <el-form-item label="邮箱">
-          <el-input v-model="form.email" placeholder="请再次输入密码" type="email"/>
         </el-form-item>
       </el-form>
       <!-- <el-link type="primary"  style="margin: 0 0 20px 0;">忘记密码</el-link>         -->
@@ -25,16 +22,23 @@
 <script lang="ts">
 import { defineComponent, reactive } from 'vue'
 import { register } from '@/api/user/loginRegister'
+import router from '@/router'
 export default defineComponent({
   setup() {
     const form = reactive({
       name: '',
       password: '',
       identifyPassword: '',
-      email: ''
     })
     const submit = ()=>{
-      register(form);
+      let data = {
+        UserName: form.name,
+        password: form.password
+      }
+      register(data);
+      router.push({
+        path: '/'
+      })
     }
     return {
       form,
@@ -49,7 +53,7 @@ export default defineComponent({
   height: 100vh;
   width: 100%;
   padding: 30vh 0;
-  background-image: url(@/src/assets/img/back.jpg);
+  background-image: url(@/assets/img/back.jpg);
   background-size: cover;
 }
 .inputContainer{

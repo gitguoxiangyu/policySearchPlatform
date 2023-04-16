@@ -13,10 +13,17 @@
 
 <script lang="ts" setup>
 import { usePolicyStore } from '@/stores/usePolicyStore'
+import router from '@/router';
 
 const { tempPolicy , setPolicy } = usePolicyStore()
-console.log(tempPolicy.value);
 
+console.log(tempPolicy);
+
+// if (tempPolicy.value == undefined){
+//   router.push({
+//     path:'/',
+//   })
+// }
 </script>
 
 <style lang="less" scoped>

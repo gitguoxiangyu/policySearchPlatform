@@ -2,7 +2,7 @@
   <div class="main">
     <div class="header">
       <div class="left" @click="toHome">
-        政策检索平台
+        问政寻策——政策检索平台
       </div>
       <div class="right">
         <el-input
@@ -21,7 +21,7 @@
         <div class="userInfo" v-else>
           <el-dropdown>
             <span class="el-dropdown-link">
-              尊敬的xxx用户，您好
+              尊敬的{{userInfo.UserName}}用户，您好
               <el-icon class="el-icon--right">
                 <arrow-down />
               </el-icon>
@@ -45,10 +45,11 @@
   import { Search } from '@element-plus/icons-vue'
   import router from "@/router";
   import { userUserInfoStore } from '@/stores/useUserInfoStore'
+  import { storeToRefs } from 'pinia';
 
   const searchValue = ref<string>('')
-
-  const {isLogin , logout} = userUserInfoStore()
+  const {logout} = userUserInfoStore()
+  const {isLogin , userInfo} = storeToRefs(userUserInfoStore())
 
   const handleClear = ()=>{
     searchValue.value = ''
@@ -62,6 +63,14 @@
 
   const handleSearch = ()=>{
     // 搜索逻辑
+    if (searchValue.value){
+      router.push({
+        path: '/list',
+        query: {
+          'keyword':searchValue.value
+        }
+      })
+    }
   }
 
   // 登录注册
@@ -74,6 +83,10 @@
   }
   const handleRegister = ()=> {
     // 注册逻辑
+    console.log("register");
+    router.push({
+      path: '/register'
+    })
   }
 
   // 登陆后，功能

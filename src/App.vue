@@ -5,7 +5,9 @@ import HeadBar from '@/components/headBar.vue'
 
 <template>
   <HeadBar/>
-  <RouterView />
+  <keep-alive include="SearchList">
+    <RouterView />
+  </keep-alive>
 </template>
 
 <style scoped>

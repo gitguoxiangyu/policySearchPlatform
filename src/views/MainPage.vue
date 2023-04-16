@@ -13,15 +13,14 @@
             <div class="recommend-title"> 推荐文章</div>
             <div class="recommend-policys">
               <el-collapse>
-                <el-collapse-item v-for="item in policies" :title="item.title" :name="item.id">
+                <el-collapse-item v-for="item in policies" :title="item._source.POLICY_TITLE" :name="item.id">
                   <div>
-                    中共中央发出关于学习《习近平著作选读》第一卷、第二卷的通知
+                    <span style="font-weight: bold;">发文机关： </span> {{ item._source.POLICY_SOURCE }}
                   </div>
                   <div>
-                    Consistent within interface: all elements should be consistent, such
-                    as: design style, icons and texts, position of elements, etc.
+                    <span style="font-weight: bold;">发文时间： </span> {{ item._source.UPDATE_DATE }}
                   </div>
-                  <div class="policy-link">查看全文</div>
+                  <el-link type="primary" @click="toPolicyView(item)">查看全文</el-link>
                 </el-collapse-item>
               </el-collapse>
             </div>
@@ -41,14 +40,38 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import searchInput from '@/components/searchInput.vue'
+import {recommendPolicy} from '@/api/policy/recommend'
+import {usePolicyStore} from '@/stores/usePolicyStore'
+import router from '@/router';
+import { searchPolicy } from '@api/policy/search';
+import type {condition} from '@/common/type'
 
-const policies = [
-  { id: 1, title: '政策标题1', summary: '政策概要信息1' },
-  { id: 2, title: '政策标题2', summary: '政策概要信息2' },
-  { id: 3, title: '政策标题3', summary: '政策概要信息3' },
-  { id: 4, title: '政策标题4', summary: '政策概要信息4' },
-  { id: 5, title: '政策标题5', summary: '政策概要信息5' }
-]
+let policies = ref([])
+recommendPolicy().then((data)=>{
+  console.log(data);
+  policies.value = data
+})
+
+// const condition: condition = {
+//   keyword: '',
+//   grade: '国级'
+// }
+// searchPolicy(condition).then((data:Array<any>)=>{
+//   console.log(data);
+//   let temp = {
+//     _source: data
+//   }
+// })
+
+const {setPolicy} = usePolicyStore()
+const toPolicyView = (item)=>{
+  setPolicy(item._source)
+
+  router.push({
+    path: '/policy'
+  })
+}
+
 </script>
 
 <style scoped lang="less">

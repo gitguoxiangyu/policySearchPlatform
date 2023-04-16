@@ -14,23 +14,28 @@ const router = createRouter({
       component: ()=> import('../views/login.vue')
     },
     {
+      path: '/register',
+      name: 'Register',
+      component: ()=> import('../views/register.vue')
+    },
+    {
       path: '/search',
       name: 'Search',
       component: ()=> import('../views/DetailSearch.vue')
     },
     {
       path: '/list',
-      name: 'list',
+      name: 'List',
       component: ()=> import('../views/SearchList.vue'),
     },
     {
       path: '/policy',
-      name: 'policy',
+      name: 'Policy',
       component: ()=> import('../views/PolicyView.vue')
     },
     {
       path: '/personal',
-      name: 'personal',
+      name: 'Personal',
       component: ()=> import('../views/PersonInfo.vue')
     }
   ]

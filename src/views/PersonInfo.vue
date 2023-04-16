@@ -1,83 +1,97 @@
 <template>
   <div class="mainContent">
-    <el-form :model="form" label-width="80px">
+    <el-form :model="form" label-width="120px" label-position="left">
       <el-form-item label="用户名">
         <el-input v-model="form.username" disabled></el-input>
       </el-form-item>
       <el-form-item label="邮箱">
         <el-input v-model="form.email"></el-input>
       </el-form-item>
-      <el-form-item label="倾向政策类型">
-        <el-radio-group v-model="form.politicalTendency">
-          <el-radio-button label="左派"></el-radio-button>
-          <el-radio-button label="中间派"></el-radio-button>
-          <el-radio-button label="右派"></el-radio-button>
-          <!-- 自定义倾向政策类型 -->
-          <template v-if='isEdit'>
-            &nbsp;&nbsp;&nbsp;
-            <el-input v-model='form.politicalTendency' placeholder='自定义'></el-input>
-          </template>
-        </el-radio-group>
+      <el-form-item label="政策倾向">
+        <el-tag
+          v-for="tag in form.tendency"
+          :key="tag"
+          closable
+          @close="close(tag)"
+        >
+          {{ tag }}
+        </el-tag>
+        <el-input
+          v-if="inputVisible"
+          ref="InputRef"
+          v-model="inputValue"
+          size="small"
+          @keyup.enter="handleInputConfirm"
+          @blur="handleInputConfirm"
+        />
+        <el-button v-else class="button-new-tag ml-1" size="small" @click="showInput">
+          + New Tag
+        </el-button>
       </el-form-item>
-      <el-form-item label="兴趣">
-        <el-checkbox-group v-model="form.interests">
-          <el-checkbox label="篮球"></el-checkbox>
-          <el-checkbox label="足球"></el-checkbox>
-          <el-checkbox label="游泳"></el-checkbox>
-          <el-checkbox label="跑步"></el-checkbox>
-        </el-checkbox-group>
-      </el-form-item>
-      <el-form-item label="工作行业">
-        <el-select v-model="form.industry" placeholder="请选择">
-          <el-option label="IT" value="IT"></el-option>
-          <el-option label="金融" value="金融"></el-option>
-          <el-option label="教育" value="教育"></el-option>
-          <el-option label="医疗" value="医疗"></el-option>
-        </el-select>
-      </el-form-item>
-
       <!-- 编辑和保存按钮 -->
-      <div style='text-align: center;'>
-        <!-- 编辑按钮 -->
-        <template v-if='!isEdit'>
-          <button class='edit-btn' @click='isEdit = true'>编辑</button>
-        </template>
-
-        <!-- 保存按钮 -->
-        <template v-else>
-          <!-- 取消按钮 -->
-          &nbsp;&nbsp;&nbsp;
-          <button class='cancel-btn' @click='isEdit = false'>取消</button>
-
-          <!-- 保存按钮 -->
-          &nbsp;&nbsp;&nbsp;
-          <button class='save-btn' @click='save'>保存</button>
-
-        </template>
-
-      </div>
-
+      <el-button type="primary" @click="saveInfo" >保存</el-button>
+      <el-button type="info" @click="cancelSave">取消</el-button>
     </el-form>
   </div>
 </template>
 
 <script setup lang='ts'>
-import { ref } from 'vue'
+import router from '@/router';
+import { reactive, ref } from 'vue'
+import { userUserInfoStore } from '@/stores/useUserInfoStore'
+import { resetTendency , setEmail} from '@/api/user/user'
 
-const form = ref({
+const form = reactive({
   username: '',
   email: '',
-  politicalTendency: '',
-  interests: [],
-  industry: ''
+  tendency: []
 })
+const {userInfo} = userUserInfoStore()
+form.username =  userInfo.UserName
+form.email =  userInfo.email
+form.tendency =  userInfo.tendency
 
-const isEdit = ref(false)
+const Remove = JSON.parse(JSON.stringify(form.tendency))
 
-function save() {
-  console.log('保存成功')
-  isEdit.value = false
+let inputVisible = ref(false)
+const inputValue = ref('')
+const showInput = () => {
+  inputVisible.value = true
 }
+const handleInputConfirm = () => {
+  if (inputValue.value) {
+    form.tendency.push(inputValue.value)
+  }
+  inputVisible.value = false
+  inputValue.value = ''
+}
+const close = (val)=>{
+  form.tendency.splice(form.tendency.indexOf(val), 1)
+  
+}
+
+function saveInfo() {
+  if(form.email != ''){
+    setEmail(form.email)
+  }
+  if(form.tendency.length != 0){
+    let data = {
+      Removed: Remove,
+      Added: form.tendency
+    }
+    resetTendency(data)
+  }
+  router.push({
+    path: '/'
+  })
+}
+
+function cancelSave(){
+  router.push({
+    path: '/'
+  })
+}
+
 
 </script>
 
