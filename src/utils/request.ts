@@ -6,9 +6,9 @@ import router from '@/router/index'
 const axios = Axios
 // 配置不同环境下，axios的默认请求地址
 if (process.env.NODE_ENV == 'development'){
-  // axios.defaults.baseURL = 'http://121.37.119.47:8080'
+  axios.defaults.baseURL = 'http://121.37.119.47:8080'
   
-  axios.defaults.baseURL = 'http://113.54.236.199:8080'
+  // axios.defaults.baseURL = 'http://113.54.236.199:8080'
 }else if (process.env.NODE_ENV == 'debug'){
   axios.defaults.baseURL = ''
 }else if (process.env.NODE_ENV == 'production'){
