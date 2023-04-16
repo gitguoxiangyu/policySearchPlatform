@@ -108,7 +108,6 @@ const { tempPolicy , setPolicy } = usePolicyStore()
 
 const toPolicyView = (item) => {
   setPolicy(item._source)
-  console.log(tempPolicy);
   router.push({
     path: '/policy'
   })
