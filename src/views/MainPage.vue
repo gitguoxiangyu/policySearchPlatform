@@ -43,8 +43,8 @@ import searchInput from '@/components/searchInput.vue'
 import {recommendPolicy} from '@/api/policy/recommend'
 import {usePolicyStore} from '@/stores/usePolicyStore'
 import router from '@/router';
-import { searchPolicy } from '@api/policy/search';
-import type {condition} from '@/common/type'
+// import { searchPolicy } from '@api/policy/search';
+// import type {condition} from '@/common/type'
 
 let policies = ref([])
 recommendPolicy().then((data)=>{

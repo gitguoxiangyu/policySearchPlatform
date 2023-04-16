@@ -10,9 +10,9 @@ if (process.env.NODE_ENV == 'development'){
   
   // axios.defaults.baseURL = 'http://113.54.236.199:8080'
 }else if (process.env.NODE_ENV == 'debug'){
-  axios.defaults.baseURL = ''
+  axios.defaults.baseURL = 'http://121.37.119.47:8080'
 }else if (process.env.NODE_ENV == 'production'){
-  axios.defaults.baseURL = ''
+  axios.defaults.baseURL = 'http://121.37.119.47:8080'
 }
 
 axios.defaults.timeout = 3000
